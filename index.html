@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Breast Health Awareness Community Quiz / Kuiz Kesedaran Kesihatan Payudara</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Outfit & Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        ribbon: {
+                            50: '#fff1f4',
+                            100: '#ffe4e8',
+                            200: '#fecdd6',
+                            300: '#fda4af',
+                            400: '#fb7185',
+                            500: '#f43f5e',
+                            600: '#e11d48',
+                            700: '#be123c',
+                            800: '#9f1239',
+                            900: '#881337',
+                        },
+                        warmcream: '#FAF6F0',
+                    },
+                    fontFamily: {
+                        heading: ['Outfit', 'sans-serif'],
+                        body: ['Plus Jakarta Sans', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: linear-gradient(135deg, #FFF5F7 0%, #FED7E2 50%, #FFF5F7 100%);
+            min-height: 100vh;
+        }
+
+        @keyframes gentlePulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.08); }
+        }
+        .animate-ribbon {
+            animation: gentlePulse 3s infinite ease-in-out;
+        }
+
+        .quiz-card {
+            box-shadow: 0 15px 35px -5px rgba(225, 29, 72, 0.12), 0 8px 15px -6px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .option-btn {
+            touch-action: manipulation;
+            transition: all 0.2s ease;
+        }
+        .option-btn:active {
+            transform: scale(0.98);
+        }
+    </style>
+</head>
+<body class="flex flex-col items-center justify-between min-h-screen text-slate-800 p-4 sm:p-6 md:p-8">
+
+    <!-- Top Language Selector & Header Container -->
+    <header class="w-full max-w-2xl flex flex-col items-center mt-2 mb-4 sm:mb-6">
+        
+        <!-- Language Switcher Bar -->
+        <div class="w-full flex justify-between sm:justify-end items-center gap-2 mb-4">
+            
+            <!-- Sound & Music Toggle Button -->
+            <button id="sound-toggle-btn" onclick="toggleAudioMaster()" class="inline-flex items-center bg-white/90 backdrop-blur px-3 py-1.5 rounded-2xl shadow-sm border border-pink-200/80 text-sm font-bold text-slate-700 hover:text-ribbon-700 transition-colors">
+                <i id="sound-icon" class="fa-solid fa-volume-high text-ribbon-600 mr-1.5"></i>
+                <span id="sound-btn-text">Audio: ON</span>
+            </button>
+
+            <!-- Language Switcher Bar -->
+            <div class="inline-flex bg-white/90 backdrop-blur p-1.5 rounded-2xl shadow-sm border border-pink-200/80 items-center">
+                <span class="text-xs font-bold text-slate-500 uppercase px-2">
+                    <i class="fa-solid fa-globe mr-1"></i> Bahasa:
+                </span>
+                <button id="lang-en" onclick="setLanguage('en')" class="px-3.5 py-1.5 text-sm font-bold rounded-xl transition-colors bg-ribbon-600 text-white shadow-sm">
+                    English
+                </button>
+                <button id="lang-bm" onclick="setLanguage('bm')" class="px-3.5 py-1.5 text-sm font-bold rounded-xl transition-colors text-slate-700 hover:text-ribbon-700">
+                    Bahasa Melayu
+                </button>
+            </div>
+        </div>
+
+        <!-- Banner Badge -->
+        <div class="inline-flex items-center justify-center p-3 bg-white/80 backdrop-blur rounded-full shadow-sm mb-3 border border-pink-200/60">
+            <i class="fa-solid fa-ribbon text-ribbon-600 text-2xl sm:text-3xl mr-2 animate-ribbon"></i>
+            <span id="ui-subtitle" class="font-heading font-bold text-ribbon-800 text-sm sm:text-base tracking-wide uppercase">
+                Community Health & Awareness
+            </span>
+        </div>
+
+        <h1 id="ui-main-title" class="font-heading font-extrabold text-2xl sm:text-4xl text-slate-900 tracking-tight leading-tight text-center">
+            Breast Health Awareness
+        </h1>
+        <p id="ui-tagline" class="text-slate-600 font-medium text-base sm:text-lg mt-1 text-center">
+            Fact or Myth? Test Your Knowledge!
+        </p>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="w-full max-w-2xl my-auto">
+
+        <!-- ================= WELCOME SCREEN ================= -->
+        <section id="welcome-screen" class="quiz-card bg-white rounded-3xl p-6 sm:p-10 border border-pink-100 text-center relative overflow-hidden">
+            <div class="absolute -top-12 -right-12 w-32 h-32 bg-ribbon-100 rounded-full blur-xl opacity-70 pointer-events-none"></div>
+            <div class="absolute -bottom-12 -left-12 w-32 h-32 bg-amber-100 rounded-full blur-xl opacity-70 pointer-events-none"></div>
+
+            <div class="relative z-10">
+                <div class="w-20 h-20 bg-ribbon-50 text-ribbon-600 rounded-2xl flex items-center justify-center mx-auto mb-6 text-4xl shadow-inner border border-ribbon-100">
+                    <i class="fa-solid fa-heart-pulse"></i>
+                </div>
+
+                <h2 id="welcome-title" class="font-heading font-bold text-2xl sm:text-3xl text-slate-900 mb-4">
+                    Welcome to Our Community Quiz!
+                </h2>
+
+                <p id="welcome-intro" class="text-slate-600 text-lg leading-relaxed mb-6">
+                    Taking care of your health starts with understanding the facts. Answer 5 quick questions to learn simple truths about breast health, screening, and early detection.
+                </p>
+
+                <!-- Quick Highlights Box -->
+                <div class="bg-warmcream/80 border border-amber-200/70 rounded-2xl p-4 sm:p-5 mb-8 text-left space-y-3">
+                    <div class="flex items-start">
+                        <i class="fa-solid fa-circle-check text-ribbon-600 text-xl mt-0.5 mr-3 flex-shrink-0"></i>
+                        <span id="welcome-feat-1" class="text-slate-700 font-medium text-base sm:text-lg">Designed for quick, easy reading (5 simple questions).</span>
+                    </div>
+                    <div class="flex items-start">
+                        <i class="fa-solid fa-circle-check text-ribbon-600 text-xl mt-0.5 mr-3 flex-shrink-0"></i>
+                        <span id="welcome-feat-2" class="text-slate-700 font-medium text-base sm:text-lg">Learn essential screening guidelines for age 40 and above.</span>
+                    </div>
+                    <div class="flex items-start">
+                        <i class="fa-solid fa-circle-check text-ribbon-600 text-xl mt-0.5 mr-3 flex-shrink-0"></i>
+                        <span id="welcome-feat-3" class="text-slate-700 font-medium text-base sm:text-lg">Empower yourself and your loved ones with facts.</span>
+                    </div>
+                </div>
+
+                <button id="start-btn" onclick="startQuiz()" class="w-full sm:w-auto px-8 py-4 bg-ribbon-600 hover:bg-ribbon-700 text-white font-heading font-bold text-xl rounded-2xl shadow-lg shadow-ribbon-600/30 transition transform hover:-translate-y-0.5 focus:outline-none focus:ring-4 focus:ring-ribbon-300 active:scale-95 inline-flex items-center justify-center">
+                    <span id="start-btn-text">Start Quiz</span>
+                    <i class="fa-solid fa-arrow-right ml-3 text-lg"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- ================= QUIZ SCREEN ================= -->
+        <section id="quiz-screen" class="hidden quiz-card bg-white rounded-3xl p-6 sm:p-8 border border-pink-100">
+            
+            <!-- Progress Bar & Indicator -->
+            <div class="mb-6">
+                <div class="flex justify-between items-center mb-2">
+                    <span id="question-tracker" class="text-sm font-bold text-ribbon-700 uppercase tracking-wider">
+                        Question 1 of 5
+                    </span>
+                    <span id="score-tracker" class="text-sm font-semibold text-slate-500 bg-slate-100 px-3 py-1 rounded-full">
+                        Score: 0
+                    </span>
+                </div>
+                <div class="w-full bg-slate-100 h-3 rounded-full overflow-hidden p-0.5 border border-slate-200/50">
+                    <div id="progress-bar" class="bg-gradient-to-r from-ribbon-500 to-ribbon-600 h-full rounded-full transition-all duration-500 ease-out" style="width: 20%;"></div>
+                </div>
+            </div>
+
+            <!-- Question Statement Box -->
+            <div class="bg-pink-50/50 border border-pink-100/80 rounded-2xl p-5 sm:p-6 mb-6">
+                <h3 id="question-text" class="font-heading font-bold text-xl sm:text-2xl text-slate-900 leading-snug">
+                    <!-- Dynamic Question Text -->
+                </h3>
+            </div>
+
+            <!-- Choice Buttons (Fact/Myth or Fakta/Mitos) -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6" id="options-container">
+                <button onclick="selectOption('Fact')" id="btn-fact" class="option-btn group w-full p-5 rounded-2xl border-2 border-slate-200 bg-white hover:border-ribbon-500 hover:bg-ribbon-50 text-left flex items-center transition shadow-sm hover:shadow">
+                    <div class="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-700 font-heading font-extrabold text-xl flex items-center justify-center mr-4 group-hover:scale-105 transition-transform flex-shrink-0">
+                        A
+                    </div>
+                    <div>
+                        <span id="btn-fact-title" class="block font-heading font-bold text-xl text-slate-800 group-hover:text-ribbon-900">FACT</span>
+                        <span id="btn-fact-sub" class="text-xs text-slate-500 font-medium">This statement is true</span>
+                    </div>
+                </button>
+
+                <button onclick="selectOption('Myth')" id="btn-myth" class="option-btn group w-full p-5 rounded-2xl border-2 border-slate-200 bg-white hover:border-ribbon-500 hover:bg-ribbon-50 text-left flex items-center transition shadow-sm hover:shadow">
+                    <div class="w-12 h-12 rounded-xl bg-rose-100 text-rose-700 font-heading font-extrabold text-xl flex items-center justify-center mr-4 group-hover:scale-105 transition-transform flex-shrink-0">
+                        B
+                    </div>
+                    <div>
+                        <span id="btn-myth-title" class="block font-heading font-bold text-xl text-slate-800 group-hover:text-ribbon-900">MYTH</span>
+                        <span id="btn-myth-sub" class="text-xs text-slate-500 font-medium">This statement is false</span>
+                    </div>
+                </button>
+            </div>
+
+            <!-- Explanation Feedback Box -->
+            <div id="explanation-box" class="hidden rounded-2xl p-5 sm:p-6 mb-6 border transition-all duration-300">
+                <div class="flex items-center mb-3">
+                    <div id="feedback-icon" class="w-8 h-8 rounded-full flex items-center justify-center text-white mr-3 font-bold text-base flex-shrink-0"></div>
+                    <h4 id="feedback-title" class="font-heading font-bold text-xl sm:text-2xl"></h4>
+                </div>
+                <p id="explanation-text" class="text-slate-700 text-base sm:text-lg leading-relaxed font-medium">
+                    <!-- Dynamic Explanation -->
+                </p>
+            </div>
+
+            <!-- Next Button -->
+            <button id="next-btn" onclick="nextQuestion()" class="hidden w-full py-4 bg-slate-900 hover:bg-slate-800 text-white font-heading font-bold text-xl rounded-2xl shadow-lg transition transform active:scale-95 flex items-center justify-center">
+                <span id="next-btn-text">Next Question</span>
+                <i class="fa-solid fa-chevron-right ml-3 text-lg"></i>
+            </button>
+
+        </section>
+
+        <!-- ================= RESULTS SCREEN ================= -->
+        <section id="results-screen" class="hidden quiz-card bg-white rounded-3xl p-6 sm:p-10 border border-pink-100 text-center">
+            
+            <div id="score-badge" class="w-24 h-24 rounded-full bg-ribbon-100 text-ribbon-600 flex items-center justify-center mx-auto mb-4 border-4 border-ribbon-200">
+                <i class="fa-solid fa-award text-5xl"></i>
+            </div>
+
+            <h2 id="result-title" class="font-heading font-extrabold text-3xl sm:text-4xl text-slate-900 mb-2">
+                Great Job!
+            </h2>
+            <p id="result-sub" class="text-slate-600 font-medium text-lg mb-4">You have completed the Breast Health Quiz.</p>
+
+            <!-- Final Score Display -->
+            <div class="bg-pink-50/70 border border-pink-200/80 rounded-2xl p-4 sm:p-6 mb-6 inline-block w-full">
+                <p id="result-score-label" class="text-slate-600 text-sm font-semibold uppercase tracking-wider mb-1">Your Final Score</p>
+                <p class="font-heading font-extrabold text-4xl sm:text-5xl text-ribbon-700">
+                    <span id="final-score">0</span> / 5
+                </p>
+                <p id="encouragement-msg" class="text-slate-700 font-semibold text-base sm:text-lg mt-3">
+                    Knowledge is power! Thank you for taking time for your health today.
+                </p>
+            </div>
+
+            <!-- Key Health Takeaways -->
+            <div class="text-left bg-warmcream/90 border border-amber-200/80 rounded-2xl p-5 sm:p-6 mb-8">
+                <h3 id="takeaways-header" class="font-heading font-bold text-xl text-slate-900 mb-4 flex items-center">
+                    <i class="fa-solid fa-lightbulb text-amber-500 mr-2.5 text-2xl"></i>
+                    3 Key Takeaways to Remember:
+                </h3>
+                <ul class="space-y-3.5 text-slate-700 font-medium text-base">
+                    <li class="flex items-start">
+                        <i class="fa-solid fa-check text-emerald-600 mt-1 mr-3 text-lg flex-shrink-0"></i>
+                        <span id="takeaway-1"><strong>Know Your Normal:</strong> Pay attention to your breasts monthly so you notice any changes in skin texture, shape, or lumps right away.</span>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fa-solid fa-check text-emerald-600 mt-1 mr-3 text-lg flex-shrink-0"></i>
+                        <span id="takeaway-2"><strong>Schedule Routine Mammograms:</strong> Annual or biennial screening is recommended starting at age 40.</span>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fa-solid fa-check text-emerald-600 mt-1 mr-3 text-lg flex-shrink-0"></i>
+                        <span id="takeaway-3"><strong>Early Detection Saves Lives:</strong> Finding changes early provides the best outcomes and highest treatment success rates.</span>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Restart Button -->
+            <button onclick="resetQuiz()" class="w-full sm:w-auto px-8 py-4 bg-ribbon-600 hover:bg-ribbon-700 text-white font-heading font-bold text-xl rounded-2xl shadow-lg shadow-ribbon-600/30 transition transform hover:-translate-y-0.5 active:scale-95 inline-flex items-center justify-center">
+                <i class="fa-solid fa-rotate-right mr-3 text-lg"></i>
+                <span id="restart-btn-text">Play Again (Next Visitor)</span>
+            </button>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="w-full max-w-2xl text-center mt-6 text-xs sm:text-sm text-slate-500 font-medium">
+        <p id="footer-text">PINK POWER: SAYANGI DIRI! PANTAS BERTINDAK PINTAS KANSER! • Outreach Programme- KPT Prihatin MADANI</p>
+        <p id="footer-disclaimer" class="text-slate-400 text-xs mt-1">This quiz is for educational purposes and is not a substitute for professional medical advice.</p>
+    </footer>
+
+    <!-- JavaScript Engine -->
+    <script>
+        let currentLang = 'en'; // Default language ('en' or 'bm')
+
+        // Dictionary for Static UI Labels
+        const uiText = {
+            en: {
+                subtitle: "Community Health & Awareness",
+                mainTitle: "Breast Health Awareness",
+                tagline: "Fact or Myth? Test Your Knowledge!",
+                welcomeTitle: "Welcome to Our Community Quiz!",
+                welcomeIntro: "Taking care of your health starts with understanding the facts. Answer 5 quick questions to learn simple truths about breast health, screening, and early detection.",
+                welcomeFeat1: "Designed for quick, easy reading (5 simple questions).",
+                welcomeFeat2: "Learn essential screening guidelines for age 40 and above.",
+                welcomeFeat3: "Empower yourself and your loved ones with facts.",
+                startBtn: "Start Quiz",
+                factBtnTitle: "FACT",
+                factBtnSub: "This statement is true",
+                mythBtnTitle: "MYTH",
+                mythBtnSub: "This statement is false",
+                questionTracker: "Question {curr} of {total}",
+                scoreTracker: "Score: {score}",
+                nextBtn: "Next Question",
+                resultsBtn: "See Results",
+                correctTitle: "Correct! 🎉",
+                incorrectFactTitle: "Not quite! It's a Fact. 💡",
+                incorrectMythTitle: "Not quite! It's a Myth. 💡",
+                resultTitle: "Great Job!",
+                resultSub: "You have completed the Breast Health Quiz.",
+                resultScoreLabel: "Your Final Score",
+                takeawaysHeader: "3 Key Takeaways to Remember:",
+                takeaway1: "<strong>Know Your Normal:</strong> Pay attention to your breasts monthly so you notice any changes in skin texture, shape, or lumps right away.",
+                takeaway2: "<strong>Schedule Routine Mammograms:</strong> Screening mammograms are recommended starting at age 40.",
+                takeaway3: "<strong>Early Detection Saves Lives:</strong> Finding changes early provides the best outcomes and highest treatment success rates.",
+                restartBtn: "Restart Quiz (Next Visitor)",
+                encouragementHigh: "Outstanding! You are super knowledgeable about breast health! Spread the word to family and friends.",
+                encouragementMid: "Great job! You know your breast health basics well. Thank you for taking time to stay informed today!",
+                encouragementLow: "Thank you for completing the quiz! Today is a great day to learn new facts and prioritize your health.",
+                footerText: "PINK POWER: SAYANGI DIRI! PANTAS BERTINDAK PINTAS KANSER! • Outreach Programme- KPT Prihatin MADANI",
+                footerDisclaimer: "This quiz is for educational purposes and is not a substitute for professional medical advice."
+            },
+            bm: {
+                subtitle: "Kesedaran Kesihatan Komuniti",
+                mainTitle: "Kesedaran Kesihatan Payudara",
+                tagline: "Fakta atau Mitos? Uji Pengetahuan Anda!",
+                welcomeTitle: "Selamat Datang ke Kuiz Komuniti!",
+                welcomeIntro: "Menjaga kesihatan bermula dengan memahami fakta. Jawab 5 soalan ringkas untuk mempelajari kebenaran tentang kesihatan payudara, ujian saringan, dan pengesanan awal.",
+                welcomeFeat1: "Direka untuk bacaan pantas & mudah (5 soalan ringkas).",
+                welcomeFeat2: "Ketahui panduan saringan penting untuk umur 40 tahun ke atas.",
+                welcomeFeat3: "Perkasakan diri dan insan tersayang dengan fakta yang betul.",
+                startBtn: "Mula Kuiz",
+                factBtnTitle: "FAKTA",
+                factBtnSub: "Pernyataan ini adalah benar",
+                mythBtnTitle: "MITOS",
+                mythBtnSub: "Pernyataan ini adalah palsu",
+                questionTracker: "Soalan {curr} daripada {total}",
+                scoreTracker: "Markah: {score}",
+                nextBtn: "Soalan Seterusnya",
+                resultsBtn: "Lihat Keputusan",
+                correctTitle: "Tepat Sekali! 🎉",
+                incorrectFactTitle: "Jawapan kurang tepat! Ia adalah Fakta. 💡",
+                incorrectMythTitle: "Jawapan kurang tepat! Ia adalah Mitos. 💡",
+                resultTitle: "Syabas & Tahniah!",
+                resultSub: "Anda telah menyelesaikan Kuiz Kesihatan Payudara.",
+                resultScoreLabel: "Markah Akhir Anda",
+                takeawaysHeader: "3 Amalan Penting Kesihatan Payudara:",
+                takeaway1: "<strong>Peka Perubahan Diri:</strong> Periksa payudara anda setiap bulan supaya anda dapat mengesan sebarang perubahan bentuk, tekstur kulit, atau benjolan dengan awal.",
+                takeaway2: "<strong>Jalani Ujian Mamogram Berkala:</strong> Ujian saringan mamogram disyorkan bermula pada umur 40 tahun.",
+                takeaway3: "<strong>Pengesanan Awal Menyelamatkan Nyawa:</strong> Mengesan perubahan di peringkat awal memberikan kadar kejayaan rawatan yang paling tinggi.",
+                restartBtn: "Mula Semula (Peserta Seterusnya)",
+                encouragementHigh: "Cemerlang! Anda sangat prihatin dan berpengetahuan tentang kesihatan payudara. Kongsikan fakta ini bersama rakan dan keluarga!",
+                encouragementMid: "Syabas! Anda memahami asas kesihatan payudara dengan baik. Terima kasih kerana meluangkan masa hari ini!",
+                encouragementLow: "Terima kasih kerana melengkapkan kuiz ini! Hari ini adalah peluang terbaik untuk mempelajari fakta baharu demi kesihatan anda.",
+                footerText: "Bulan Kesedaran Kanser Payudara • Program Outreach Kesihatan Komuniti",
+                footerDisclaimer: "Kuiz ini adalah untuk tujuan pendidikan sahaja dan bukan pengganti nasihat perubatan profesional."
+            }
+        };
+
+        // Quiz Questions Data Model (Bilingual)
+        const quizData = [
+            {
+                type: "Myth",
+                question: {
+                    en: "If no one in my family has had breast cancer, I don't need to worry about getting it.",
+                    bm: "Jika tiada ahli keluarga saya yang pernah menghidap kanser payudara, saya tidak perlu risau menghidapnya."
+                },
+                explanation: {
+                    en: "Over 85% of women diagnosed with breast cancer have NO family history of the disease. Aging is a primary risk factor, making regular check-ups important for everyone starting in their 40s.",
+                    bm: "Lebih 85% individu yang didiagnosis tidak mempunyai sejarah keluarga. Umur adalah faktor risiko utama, jadi pemeriksaan berkala penting untuk semua individu berusia 40 tahun ke atas."
+                }
+            },
+            {
+                type: "Myth",
+                question: {
+                    en: "If a woman can already feel a lump in her breast, she no longer needs to get a mammogram.",
+                    bm: "Jika seorang wanita sudah dapat merasakan ketulan pada payudaranya, dia tidak perlu lagi menjalani mamogram."
+                },
+                explanation: {
+                    en: "A physical exam or self-exam can find a lump, but a diagnostic mammogram and ultrasound are still essential. They help doctors examine the size, exact location, and characteristics of the lump, as well as check the surrounding breast tissue for any other hidden changes.",
+                    bm: "Pemeriksaan fizikal atau sendiri boleh mengesan ketulan, tetapi mamogram diagnostik dan ultrabunyi tetap penting. Ia membantu doktor memeriksa saiz, lokasi tepat, dan ciri-ciri ketulan tersebut, serta memeriksa tisu payudara di sekitarnya untuk mengesan sebarang perubahan lain yang tersembunyi."
+                }
+            },
+            {
+                type: "Myth",
+                question: {
+                    en: "Finding a lump in your breast automatically means you have cancer.",
+                    bm: "Menjumpai benjolan pada payudara bermaksud anda secara automatik menghidap kanser."
+                },
+                explanation: {
+                    en: "About 80% of breast lumps turn out to be benign (non-cancerous), such as harmless cysts or fibrous tissue. However, always have any change evaluated by a doctor right away.",
+                    bm: "Hampir 80% benjolan adalah bersifat bukan kanser (benign) seperti kista (cyst). Namun, sebarang perubahan tetap perlu diperiksa oleh doktor secepat mungkin."
+                }
+            },
+            {
+                type: "Myth",
+                question: {
+                    en: "Doing breast self-exams (BSE) at home replaces the need for mammograms after age 40.",
+                    bm: "Melakukan Pemeriksaan Sendiri Payudara (PSP) di rumah sudah cukup dan boleh menggantikan ujian mamogram."
+                },
+                explanation: {
+                    en: "Self-exams help you stay familiar with your body, but mammograms are essential because they detect changes deep beneath the surface long before they can be felt.",
+                    bm: "PSP membantu anda mengenali keadaan normal payudara sendiri, tetapi ujian mamogram tetap penting kerana ia mengesan perubahan di bawah permukaan kulit jauh lebih awal."
+                }
+            },
+            {
+                type: "Fact",
+                question: {
+                    en: "Men can also develop breast cancer.",
+                    bm: "Lelaki juga boleh menghidap kanser payudara."
+                },
+                explanation: {
+                    en: "Although less common (about 1% of all cases), men also have breast tissue and should report any unusual lumps, swelling, or changes to a doctor.",
+                    bm: "Walaupun jarang berlaku (sekitar 1% daripada keseluruhan kes), lelaki juga mempunyai tisu payudara dan perlu berjumpa doktor jika terdapat sebarang benjolan atau perubahan."
+                }
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let hasAnswered = false;
+
+        // DOM Elements
+        const langEnBtn = document.getElementById('lang-en');
+        const langBmBtn = document.getElementById('lang-bm');
+
+        const welcomeScreen = document.getElementById('welcome-screen');
+        const quizScreen = document.getElementById('quiz-screen');
+        const resultsScreen = document.getElementById('results-screen');
+        
+        const questionText = document.getElementById('question-text');
+        const questionTracker = document.getElementById('question-tracker');
+        const scoreTracker = document.getElementById('score-tracker');
+        const progressBar = document.getElementById('progress-bar');
+        
+        const btnFact = document.getElementById('btn-fact');
+        const btnMyth = document.getElementById('btn-myth');
+        
+        const explanationBox = document.getElementById('explanation-box');
+        const feedbackTitle = document.getElementById('feedback-title');
+        const feedbackIcon = document.getElementById('feedback-icon');
+        const explanationText = document.getElementById('explanation-text');
+        
+        const nextBtn = document.getElementById('next-btn');
+        const nextBtnText = document.getElementById('next-btn-text');
+        const finalScore = document.getElementById('final-score');
+        const encouragementMsg = document.getElementById('encouragement-msg');
+
+        // Language Switcher Function
+        function setLanguage(lang) {
+            currentLang = lang;
+            
+            // Toggle active state on language buttons
+            if (lang === 'en') {
+                langEnBtn.className = "px-3.5 py-1.5 text-sm font-bold rounded-xl transition-colors bg-ribbon-600 text-white shadow-sm";
+                langBmBtn.className = "px-3.5 py-1.5 text-sm font-bold rounded-xl transition-colors text-slate-700 hover:text-ribbon-700";
+            } else {
+                langBmBtn.className = "px-3.5 py-1.5 text-sm font-bold rounded-xl transition-colors bg-ribbon-600 text-white shadow-sm";
+                langEnBtn.className = "px-3.5 py-1.5 text-sm font-bold rounded-xl transition-colors text-slate-700 hover:text-ribbon-700";
+            }
+
+            // Refresh UI Text across screens
+            updateAllStaticText();
+
+            // Refresh Question Text if quiz is active
+            if (!quizScreen.classList.contains('hidden')) {
+                const currentQ = quizData[currentQuestionIndex];
+                questionText.innerText = currentQ.question[currentLang];
+                questionTracker.innerText = uiText[currentLang].questionTracker
+                    .replace('{curr}', currentQuestionIndex + 1)
+                    .replace('{total}', quizData.length);
+
+                if (hasAnswered) {
+                    showExplanation(
+                        (currentQ.type === 'Fact' && btnFact.classList.contains('border-emerald-500')) ||
+                        (currentQ.type === 'Myth' && btnMyth.classList.contains('border-emerald-500')),
+                        currentQ.explanation[currentLang],
+                        currentQ.type
+                    );
+                }
+            }
+
+            // Refresh Encouragement message on results screen
+            if (!resultsScreen.classList.contains('hidden')) {
+                updateEncouragementMsg();
+            }
+        }
+
+        // Apply Static UI Text
+        function updateAllStaticText() {
+            const t = uiText[currentLang];
+
+            document.getElementById('ui-subtitle').innerText = t.subtitle;
+            document.getElementById('ui-main-title').innerText = t.mainTitle;
+            document.getElementById('ui-tagline').innerText = t.tagline;
+
+            document.getElementById('welcome-title').innerText = t.welcomeTitle;
+            document.getElementById('welcome-intro').innerText = t.welcomeIntro;
+            document.getElementById('welcome-feat-1').innerText = t.welcomeFeat1;
+            document.getElementById('welcome-feat-2').innerText = t.welcomeFeat2;
+            document.getElementById('welcome-feat-3').innerText = t.welcomeFeat3;
+            document.getElementById('start-btn-text').innerText = t.startBtn;
+
+            document.getElementById('btn-fact-title').innerText = t.factBtnTitle;
+            document.getElementById('btn-fact-sub').innerText = t.factBtnSub;
+            document.getElementById('btn-myth-title').innerText = t.mythBtnTitle;
+            document.getElementById('btn-myth-sub').innerText = t.btnMythSub || t.mythBtnSub;
+
+            document.getElementById('result-title').innerText = t.resultTitle;
+            document.getElementById('result-sub').innerText = t.resultSub;
+            document.getElementById('result-score-label').innerText = t.resultScoreLabel;
+
+            document.getElementById('takeaways-header').innerHTML = `<i class="fa-solid fa-lightbulb text-amber-500 mr-2.5 text-2xl"></i> ${t.takeawaysHeader}`;
+            document.getElementById('takeaway-1').innerHTML = t.takeaway1;
+            document.getElementById('takeaway-2').innerHTML = t.takeaway2;
+            document.getElementById('takeaway-3').innerHTML = t.takeaway3;
+            document.getElementById('restart-btn-text').innerText = t.restartBtn;
+
+            document.getElementById('footer-text').innerText = t.footerText;
+            document.getElementById('footer-disclaimer').innerText = t.footerDisclaimer;
+
+            const soundBtnText = document.getElementById('sound-btn-text');
+            if (soundBtnText) {
+                soundBtnText.innerText = audioEnabled ? t.soundOn : t.soundOff;
+            }
+
+            if (currentQuestionIndex === quizData.length - 1) {
+                nextBtnText.innerText = t.resultsBtn;
+            } else {
+                nextBtnText.innerText = t.nextBtn;
+            }
+        }
+
+        /* ================= WEB AUDIO SYNTHESIZER SYSTEM ================= */
+        let audioCtx = null;
+        let audioEnabled = true;
+        let bgmTimer = null;
+        let bgmStep = 0;
+
+        function initAudio() {
+            if (!audioCtx) {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                if (AudioContext) {
+                    audioCtx = new AudioContext();
+                }
+            }
+            if (audioCtx && audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+        }
+
+        // Global interaction listener to auto-start audio context on first tap/click
+        document.addEventListener('pointerdown', () => {
+            initAudio();
+            if (audioEnabled && !bgmTimer) {
+                startBGM();
+            }
+        }, { once: true });
+
+        function toggleAudioMaster() {
+            initAudio();
+            audioEnabled = !audioEnabled;
+            const soundIcon = document.getElementById('sound-icon');
+            const soundBtnText = document.getElementById('sound-btn-text');
+
+            if (audioEnabled) {
+                soundIcon.className = "fa-solid fa-volume-high text-ribbon-600 mr-1.5";
+                soundBtnText.innerText = currentLang === 'en' ? "Audio: ON" : "Audio: HIBAH";
+                playClickSFX();
+                startBGM();
+            } else {
+                soundIcon.className = "fa-solid fa-volume-xmark text-slate-400 mr-1.5";
+                soundBtnText.innerText = currentLang === 'en' ? "Audio: OFF" : "Audio: TUTUP";
+                stopBGM();
+            }
+        }
+
+        // Play Tone Generator Helper
+        function playTone(freq, type = 'sine', duration = 0.15, startVol = 0.15, endVol = 0.001) {
+            if (!audioEnabled || !audioCtx) return;
+            try {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+                gain.gain.setValueAtTime(startVol, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(endVol, audioCtx.currentTime + duration);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + duration);
+            } catch (e) {
+                console.warn("Audio error:", e);
+            }
+        }
+
+        // SFX 1: Button Tap
+        function playClickSFX() {
+            playTone(523.25, 'triangle', 0.08, 0.1, 0.001); // C5 note
+        }
+
+        // SFX 2: Correct Answer Chime
+        function playCorrectSFX() {
+            if (!audioEnabled || !audioCtx) return;
+            playTone(523.25, 'sine', 0.15, 0.2, 0.001); // C5
+            setTimeout(() => playTone(659.25, 'sine', 0.15, 0.2, 0.001), 100); // E5
+            setTimeout(() => playTone(783.99, 'sine', 0.35, 0.25, 0.001), 200); // G5
+        }
+
+        // SFX 3: Incorrect Reassuring Warm Chime
+        function playIncorrectSFX() {
+            if (!audioEnabled || !audioCtx) return;
+            playTone(392.00, 'sine', 0.2, 0.15, 0.001); // G4
+            setTimeout(() => playTone(329.63, 'sine', 0.3, 0.12, 0.001), 150); // E4
+        }
+
+        // SFX 4: Completion Fanfare
+        function playVictorySFX() {
+            if (!audioEnabled || !audioCtx) return;
+            const notes = [523.25, 659.25, 783.99, 1046.50];
+            notes.forEach((freq, index) => {
+                setTimeout(() => playTone(freq, 'triangle', 0.3, 0.2, 0.001), index * 120);
+            });
+        }
+
+        // Synthesized Ambient Background Melody (Smooth Pentatonic Loop)
+        function startBGM() {
+            if (bgmTimer || !audioEnabled) return;
+            const bgmSequence = [261.63, 329.63, 392.00, 440.00, 523.25, 440.00, 392.00, 329.63];
+            bgmStep = 0;
+            
+            bgmTimer = setInterval(() => {
+                if (audioEnabled && audioCtx) {
+                    const note = bgmSequence[bgmStep % bgmSequence.length];
+                    playTone(note, 'sine', 0.4, 0.03, 0.001); // Very low, gentle ambient volume
+                    bgmStep++;
+                }
+            }, 800);
+        }
+
+        function stopBGM() {
+            if (bgmTimer) {
+                clearInterval(bgmTimer);
+                bgmTimer = null;
+            }
+        }
+
+        // Start Quiz
+        function startQuiz() {
+            initAudio();
+            playClickSFX();
+            currentQuestionIndex = 0;
+            score = 0;
+            welcomeScreen.classList.add('hidden');
+            resultsScreen.classList.add('hidden');
+            quizScreen.classList.remove('hidden');
+            loadQuestion();
+        }
+
+        // Load Current Question
+        function loadQuestion() {
+            hasAnswered = false;
+            const currentQ = quizData[currentQuestionIndex];
+            const t = uiText[currentLang];
+
+            // Reset UI state
+            questionText.innerText = currentQ.question[currentLang];
+            questionTracker.innerText = t.questionTracker.replace('{curr}', currentQuestionIndex + 1).replace('{total}', quizData.length);
+            scoreTracker.innerText = t.scoreTracker.replace('{score}', score);
+            
+            const progressPercent = ((currentQuestionIndex + 1) / quizData.length) * 100;
+            progressBar.style.width = `${progressPercent}%`;
+
+            // Reset Buttons
+            resetButtonStyles(btnFact);
+            resetButtonStyles(btnMyth);
+
+            // Hide Feedback
+            explanationBox.classList.add('hidden');
+            nextBtn.classList.add('hidden');
+            
+            if (currentQuestionIndex === quizData.length - 1) {
+                nextBtnText.innerText = t.resultsBtn;
+            } else {
+                nextBtnText.innerText = t.nextBtn;
+            }
+        }
+
+        function resetButtonStyles(btn) {
+            btn.disabled = false;
+            btn.className = "option-btn group w-full p-5 rounded-2xl border-2 border-slate-200 bg-white hover:border-ribbon-500 hover:bg-ribbon-50 text-left flex items-center transition shadow-sm hover:shadow cursor-pointer opacity-100";
+        }
+
+        // User Option Click Handler
+        function selectOption(userChoice) {
+            if (hasAnswered) return;
+            hasAnswered = true;
+            initAudio();
+
+            const currentQ = quizData[currentQuestionIndex];
+            const isCorrect = userChoice === currentQ.type;
+
+            btnFact.disabled = true;
+            btnMyth.disabled = true;
+
+            highlightChoices(userChoice, currentQ.type);
+
+            if (isCorrect) {
+                score++;
+                scoreTracker.innerText = uiText[currentLang].scoreTracker.replace('{score}', score);
+                playCorrectSFX();
+                showExplanation(true, currentQ.explanation[currentLang], currentQ.type);
+            } else {
+                playIncorrectSFX();
+                showExplanation(false, currentQ.explanation[currentLang], currentQ.type);
+            }
+
+            nextBtn.classList.remove('hidden');
+        }
+
+        function highlightChoices(userChoice, correctAnswer) {
+            const selectedBtn = userChoice === 'Fact' ? btnFact : btnMyth;
+            const otherBtn = userChoice === 'Fact' ? btnMyth : btnFact;
+
+            otherBtn.classList.add('opacity-50', 'cursor-not-allowed');
+
+            if (userChoice === correctAnswer) {
+                selectedBtn.classList.remove('border-slate-200', 'hover:border-ribbon-500');
+                selectedBtn.classList.add('border-emerald-500', 'bg-emerald-50/60');
+            } else {
+                selectedBtn.classList.remove('border-slate-200', 'hover:border-ribbon-500');
+                selectedBtn.classList.add('border-rose-400', 'bg-rose-50/60');
+            }
+        }
+
+        // Feedback Explanation Box Renderer
+        function showExplanation(isCorrect, text, answerType) {
+            explanationBox.classList.remove('hidden');
+            const t = uiText[currentLang];
+
+            if (isCorrect) {
+                explanationBox.className = "rounded-2xl p-5 sm:p-6 mb-6 border bg-emerald-50 border-emerald-200 text-slate-800 animate-bounce-short";
+                feedbackIcon.className = "w-8 h-8 rounded-full flex items-center justify-center text-white mr-3 font-bold text-base flex-shrink-0 bg-emerald-600";
+                feedbackIcon.innerHTML = '<i class="fa-solid fa-check"></i>';
+                feedbackTitle.innerText = t.correctTitle;
+                feedbackTitle.className = "font-heading font-bold text-xl sm:text-2xl text-emerald-900";
+            } else {
+                explanationBox.className = "rounded-2xl p-5 sm:p-6 mb-6 border bg-amber-50 border-amber-200 text-slate-800";
+                feedbackIcon.className = "w-8 h-8 rounded-full flex items-center justify-center text-white mr-3 font-bold text-base flex-shrink-0 bg-amber-500";
+                feedbackIcon.innerHTML = '<i class="fa-solid fa-lightbulb"></i>';
+                feedbackTitle.innerText = answerType === 'Fact' ? t.incorrectFactTitle : t.incorrectMythTitle;
+                feedbackTitle.className = "font-heading font-bold text-xl sm:text-2xl text-amber-900";
+            }
+
+            explanationText.innerText = text;
+        }
+
+        function nextQuestion() {
+            playClickSFX();
+            currentQuestionIndex++;
+            if (currentQuestionIndex < quizData.length) {
+                loadQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        // Show Results Screen
+        function showResults() {
+            playVictorySFX();
+            quizScreen.classList.add('hidden');
+            resultsScreen.classList.remove('hidden');
+            finalScore.innerText = score;
+            updateEncouragementMsg();
+        }
+
+        function updateEncouragementMsg() {
+            const t = uiText[currentLang];
+            if (score === 5) {
+                encouragementMsg.innerText = t.encouragementHigh;
+            } else if (score >= 3) {
+                encouragementMsg.innerText = t.encouragementMid;
+            } else {
+                encouragementMsg.innerText = t.encouragementLow;
+            }
+        }
+
+        function resetQuiz() {
+            playClickSFX();
+            startQuiz();
+        }
+
+        // Initialize default UI Text
+        updateAllStaticText();
+    </script>
+</body>
+</html>
